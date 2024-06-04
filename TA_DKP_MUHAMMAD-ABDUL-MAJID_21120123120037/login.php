@@ -17,11 +17,12 @@ class LoginController {
     private function login() {
         $email = $this->validate_input($_POST['email']);
         $password = $this->validate_input($_POST['password']);
-
+    
         // Validasi input
         if (empty($email)) {
             $this->error_msg = "Email tidak boleh kosong!";
         } elseif (empty($password)) {
+            $this->error_msg = "Password tidak boleh kosong!";
         } else {
             // Baca file database
             $file = fopen('database.txt', 'r');
@@ -36,7 +37,7 @@ class LoginController {
                 }
             }
             fclose($file);
-
+    
             if ($sukses) {
                 // Redirect ke halaman purchase.php setelah login berhasil
                 header("Location: purchase.php");
@@ -46,6 +47,7 @@ class LoginController {
             }
         }
     }
+    
 
     public function get_error_message() {
         return $this->error_msg;
@@ -94,8 +96,8 @@ $controller = new LoginController();
     <div class="container">
         <h2>Login</h2>
         <?php
-        if (!empty($error_msg)) {
-            echo "<p style='color: red;'>$error_msg</p>";
+        if ($controller->get_error_message()) {
+            echo "<p style='color: red;'>" . $controller->get_error_message() . "</p>";
         }
         ?>
         <form method="post" action="login.php">
